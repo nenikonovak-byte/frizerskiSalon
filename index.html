@@ -80,8 +80,8 @@
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>ID</th><th>IME I PREZIME</th><th>DATUM</th><th>VRSTA USLUGE</th><th>CENA</th><th class="actions-head">AKCIJE</th></tr></thead>
-              <tbody id="clientsTable"><tr><td colspan="6" class="empty-cell">Učitavanje podataka...</td></tr></tbody>
+              <thead><tr><th>ID</th><th>IME I PREZIME</th><th>DATUM I VREME</th><th>VRSTA USLUGE</th><th>CENA</th><th>UNEO ZAPIS</th><th class="actions-head">AKCIJE</th></tr></thead>
+              <tbody id="clientsTable"><tr><td colspan="7" class="empty-cell">Učitavanje podataka...</td></tr></tbody>
             </table>
           </div>
           <div class="table-footer"><span id="resultsCount">Prikaz zapisa</span><span class="live-note"><i></i> Podaci iz zajedničke baze</span></div>
@@ -101,6 +101,7 @@
           <label>ID klijenta<input id="clientCode" type="text" placeholder="Npr. 1001" required maxlength="30"><small>Jedinstvena oznaka koju vi određujete.</small></label>
           <label>Datum usluge<input id="clientDate" type="date" required></label>
           <label class="span-2">Ime i prezime<input id="clientName" type="text" placeholder="Npr. Marko Marković" required maxlength="120"></label>
+          <label>Vreme usluge<input id="clientTime" type="time" required></label>
           <label class="span-2">Vrsta usluge<select id="clientService" required><option value="">Izaberite uslugu</option><option>Šišanje</option><option>Fen frizura</option><option>Farbanje</option><option>Pramenovi</option><option>Brada</option><option>Šišanje i brada</option><option>Frizura za svečane prilike</option><option>Ostalo</option></select></label>
           <label class="span-2">Cena (RSD)<div class="price-input"><input id="clientPrice" type="number" min="0" step="1" placeholder="Npr. 1200" required><span>RSD</span></div></label>
         </div>
