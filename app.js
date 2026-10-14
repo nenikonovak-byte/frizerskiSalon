@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 let db = null;
 let clients = [];
 let toastTimer;
+let activePeriod = "all";
 
 const money = (value) => new Intl.NumberFormat("sr-RS", { maximumFractionDigits: 0 }).format(Number(value || 0)) + " RSD";
 const dateDisplay = (value) => {
@@ -59,10 +60,25 @@ function closeModal() { $("clientModal").classList.add("hidden"); }
 function filteredClients() {
   const query = $("searchInput").value.trim().toLocaleLowerCase("sr");
   const service = $("serviceFilter").value;
-  return clients.filter(c => {
+  const period = activePeriod;
+  const today = todayISO();
+  const weekStart = new Date(); weekStart.setHours(0,0,0,0); weekStart.setDate(weekStart.getDate()-6);
+  const weekStartISO = `${weekStart.getFullYear()}-${String(weekStart.getMonth()+1).padStart(2,"0")}-${String(weekStart.getDate()).padStart(2,"0")}`;
+  const rows = clients.filter(c => {
     const searchable = `${c.client_code} ${c.full_name} ${c.service_type} ${c.created_by_email || ""}`.toLocaleLowerCase("sr");
-    return (!query || searchable.includes(query)) && (!service || c.service_type === service);
-  }).sort((a,b) => b.service_date.localeCompare(a.service_date) || String(b.service_time || "").localeCompare(String(a.service_time || "")) || String(b.client_code).localeCompare(String(a.client_code)));
+    const date = c.service_date || "";
+    const periodMatch = period === "all" || (period === "today" && date === today) || (period === "week" && date >= weekStartISO && date <= today);
+    return (!query || searchable.includes(query)) && (!service || c.service_type === service) && periodMatch;
+  });
+  const sort = $("sortFilter")?.value || "newest";
+  rows.sort((a,b) => {
+    if (sort === "oldest") return (a.service_date || "").localeCompare(b.service_date || "") || String(a.service_time || "").localeCompare(String(b.service_time || ""));
+    if (sort === "name") return String(a.full_name || "").localeCompare(String(b.full_name || ""), "sr");
+    if (sort === "price-high") return Number(b.price || 0) - Number(a.price || 0);
+    if (sort === "price-low") return Number(a.price || 0) - Number(b.price || 0);
+    return (b.service_date || "").localeCompare(a.service_date || "") || String(b.service_time || "").localeCompare(String(a.service_time || ""));
+  });
+  return rows;
 }
 function render() {
   const rows = filteredClients();
@@ -80,7 +96,13 @@ function render() {
       <td><div class="row-actions"><button class="icon-btn edit-btn" data-edit="${c.id}" title="Izmeni" aria-label="Izmeni zapis">✎</button><button class="icon-btn delete-btn" data-delete="${c.id}" title="Obriši" aria-label="Obriši zapis">⌫</button></div></td>
     </tr>`).join("");
   }
-  $("resultsCount").textContent = `${rows.length} ${rows.length === 1 ? "zapis" : "zapisa"}`;
+  $("resultsCount").textContent = `${rows.length} ${rows.length === 1 ? "poseta" : "poseta"} prikazano`;
+  const today = todayISO();
+  const weekStart = new Date(); weekStart.setHours(0,0,0,0); weekStart.setDate(weekStart.getDate()-6);
+  const weekStartISO = `${weekStart.getFullYear()}-${String(weekStart.getMonth()+1).padStart(2,"0")}-${String(weekStart.getDate()).padStart(2,"0")}`;
+  $("allCount").textContent = clients.length;
+  $("todayCount").textContent = clients.filter(c => c.service_date === today).length;
+  $("weekCount").textContent = clients.filter(c => (c.service_date || "") >= weekStartISO && (c.service_date || "") <= today).length;
   $("totalClients").textContent = clients.length.toLocaleString("sr-RS");
   const month = todayISO().slice(0,7);
   const thisMonth = clients.filter(c => (c.service_date || "").startsWith(month));
@@ -202,6 +224,12 @@ $("clientModal").addEventListener("click", e => { if (e.target.dataset.close) cl
 $("clientForm").addEventListener("submit", saveClient);
 $("searchInput").addEventListener("input", render);
 $("serviceFilter").addEventListener("change", render);
+$("sortFilter").addEventListener("change", render);
+document.querySelectorAll("[data-period]").forEach(button => button.addEventListener("click", () => {
+  activePeriod = button.dataset.period;
+  document.querySelectorAll("[data-period]").forEach(item => item.classList.toggle("active", item === button));
+  render();
+}));
 $("refreshBtn").addEventListener("click", loadClients);
 $("clientsTable").addEventListener("click", e => {
   const edit = e.target.closest("[data-edit]");
@@ -211,3 +239,4 @@ $("clientsTable").addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 init();
+
