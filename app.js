@@ -13,6 +13,11 @@ const todayISO = () => {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
 };
+const currentTime = () => {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+};
+const timeDisplay = (value) => value ? String(value).slice(0, 5) : "—";
 const configReady = () => window.APP_CONFIG &&
   window.APP_CONFIG.SUPABASE_URL.startsWith("https://") &&
   !window.APP_CONFIG.SUPABASE_URL.includes("UNESITE") &&
@@ -41,6 +46,7 @@ function openModal(client = null) {
   $("clientCode").value = client?.client_code || "";
   $("clientName").value = client?.full_name || "";
   $("clientDate").value = client?.service_date || todayISO();
+  $("clientTime").value = client ? (client.service_time ? String(client.service_time).slice(0, 5) : "") : currentTime();
   $("clientService").value = client?.service_type || "";
   $("clientPrice").value = client?.price ?? "";
   $("modalTitle").textContent = client ? "Izmeni zapis" : "Dodaj klijenta";
@@ -54,22 +60,23 @@ function filteredClients() {
   const query = $("searchInput").value.trim().toLocaleLowerCase("sr");
   const service = $("serviceFilter").value;
   return clients.filter(c => {
-    const searchable = `${c.client_code} ${c.full_name} ${c.service_type}`.toLocaleLowerCase("sr");
+    const searchable = `${c.client_code} ${c.full_name} ${c.service_type} ${c.created_by_email || ""}`.toLocaleLowerCase("sr");
     return (!query || searchable.includes(query)) && (!service || c.service_type === service);
-  }).sort((a,b) => b.service_date.localeCompare(a.service_date) || String(b.client_code).localeCompare(String(a.client_code)));
+  }).sort((a,b) => b.service_date.localeCompare(a.service_date) || String(b.service_time || "").localeCompare(String(a.service_time || "")) || String(b.client_code).localeCompare(String(a.client_code)));
 }
 function render() {
   const rows = filteredClients();
   const tbody = $("clientsTable");
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-cell"><div class="empty-icon">⌕</div><strong>Nema pronađenih zapisa</strong><small>Dodajte klijenta ili promenite pretragu.</small></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-cell"><div class="empty-icon">⌕</div><strong>Nema pronađenih zapisa</strong><small>Dodajte klijenta ili promenite pretragu.</small></td></tr>`;
   } else {
     tbody.innerHTML = rows.map(c => `<tr>
       <td><span class="id-pill">#${escapeHtml(c.client_code)}</span></td>
       <td><span class="client-avatar">${escapeHtml(initials(c.full_name))}</span><strong class="client-name">${escapeHtml(c.full_name)}</strong></td>
-      <td class="date-cell">${dateDisplay(c.service_date)}</td>
+      <td class="date-cell"><span>${dateDisplay(c.service_date)}</span><small class="time-note">${timeDisplay(c.service_time)}</small></td>
       <td><span class="service-pill">${escapeHtml(c.service_type)}</span></td>
       <td class="price-cell">${money(c.price)}</td>
+      <td class="creator-cell">${escapeHtml(c.created_by_email || "Nije zabeleženo")}</td>
       <td><div class="row-actions"><button class="icon-btn edit-btn" data-edit="${c.id}" title="Izmeni" aria-label="Izmeni zapis">✎</button><button class="icon-btn delete-btn" data-delete="${c.id}" title="Obriši" aria-label="Obriši zapis">⌫</button></div></td>
     </tr>`).join("");
   }
@@ -88,11 +95,11 @@ function escapeHtml(value) {
 }
 async function loadClients() {
   setConnection("Učitavanje...", "loading");
-  const { data, error } = await db.from("clients").select("*").order("service_date", { ascending: false });
+  const { data, error } = await db.from("clients").select("*").order("service_date", { ascending: false }).order("service_time", { ascending: false });
   if (error) {
     setConnection("Greška u vezi", "bad");
     showToast("Ne mogu da učitam podatke: " + explainError(error), true);
-    $("clientsTable").innerHTML = `<tr><td colspan="6" class="empty-cell">Podaci nisu dostupni. Proverite podešavanje baze i internet vezu.</td></tr>`;
+    $("clientsTable").innerHTML = `<tr><td colspan="7" class="empty-cell">Podaci nisu dostupni. Proverite podešavanje baze i internet vezu.</td></tr>`;
     return;
   }
   clients = data || [];
@@ -109,6 +116,7 @@ async function saveClient(event) {
     client_code: $("clientCode").value.trim(),
     full_name: $("clientName").value.trim(),
     service_date: $("clientDate").value,
+    service_time: $("clientTime").value,
     service_type: $("clientService").value,
     price: Number($("clientPrice").value)
   };
