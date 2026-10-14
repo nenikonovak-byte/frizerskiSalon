@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>Studio — Evidencija klijenata</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Studio početna">
+        <span class="brand-mark">S<span>.</span></span>
+        <span class="brand-copy"><strong>STUDIO</strong><small>FRIZERSKI SALON</small></span>
+      </a>
+      <div class="side-label">RADNI PROSTOR</div>
+      <div class="side-link active"><span class="side-icon">▦</span> Evidencija klijenata</div>
+      <div class="sidebar-note">
+        <span class="status-dot"></span>
+        <div><strong>Zajednička evidencija</strong><small>Podaci se čuvaju online</small></div>
+      </div>
+      <div class="sidebar-footer">STUDIO DESK <span>•</span> v1.0</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb">Radni prostor <span>/</span> <strong>Klijenti</strong></div>
+        <div class="top-actions">
+          <span id="connectionStatus" class="connection"><i></i> Provera veze...</span>
+          <button id="logoutBtn" class="btn btn-quiet hidden" type="button">Odjavi se ↗</button>
+        </div>
+      </header>
+
+      <section id="loginView" class="login-wrap hidden">
+        <div class="login-card">
+          <div class="login-icon">S.</div>
+          <p class="eyebrow">DOBRO DOŠLI</p>
+          <h1>Prijava u evidenciju</h1>
+          <p class="muted">Prijavite se svojim nalogom da biste pristupili zajedničkim podacima salona.</p>
+          <form id="loginForm" class="form-stack">
+            <label>Email adresa<input id="loginEmail" type="email" autocomplete="username" placeholder="ime@primer.rs" required></label>
+            <label>Lozinka<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Unesite lozinku" required></label>
+            <button class="btn btn-primary full" type="submit">Prijavi se <span>→</span></button>
+          </form>
+          <p id="loginMessage" class="form-message" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="appView" class="hidden">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">PREGLED SALONA</p>
+            <h1>Evidencija klijenata<span>.</span></h1>
+            <p class="subtitle">Sve posete, usluge i cene na jednom mestu.</p>
+          </div>
+          <button id="newClientBtn" class="btn btn-primary"><span class="plus">＋</span> Dodaj klijenta</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Ukupno klijenata</span><span class="stat-symbol">♙</span></div><strong id="totalClients">—</strong><small>Sačuvani zapisi</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Usluge ovog meseca</span><span class="stat-symbol">✦</span></div><strong id="monthVisits">—</strong><small>Prema datumu usluge</small></article>
+          <article class="stat-card stat-dark"><div class="stat-top"><span>Promet ovog meseca</span><span class="stat-symbol">↗</span></div><strong id="monthRevenue">—</strong><small>Zbir evidentiranih cena</small></article>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div><h2>Posete i klijenti</h2><p>Pregledajte, pronađite i uredite evidenciju.</p></div>
+            <button id="refreshBtn" class="btn btn-outline" type="button">↻ Osveži</button>
+          </div>
+          <div class="toolbar">
+            <div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Pretraži ID, ime ili uslugu..."></div>
+            <div class="filter-wrap"><label for="serviceFilter">Vrsta usluge</label><select id="serviceFilter"><option value="">Sve usluge</option><option>Šišanje</option><option>Fen frizura</option><option>Farbanje</option><option>Pramenovi</option><option>Brada</option><option>Šišanje i brada</option><option>Frizura za svečane prilike</option><option>Ostalo</option></select></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>IME I PREZIME</th><th>DATUM</th><th>VRSTA USLUGE</th><th>CENA</th><th class="actions-head">AKCIJE</th></tr></thead>
+              <tbody id="clientsTable"><tr><td colspan="6" class="empty-cell">Učitavanje podataka...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="table-footer"><span id="resultsCount">Prikaz zapisa</span><span class="live-note"><i></i> Podaci iz zajedničke baze</span></div>
+        </section>
+        <p class="bottom-note">Promene se čuvaju u online bazi i dostupne su svim prijavljenim korisnicima.</p>
+      </section>
+    </main>
+  </div>
+
+  <div id="clientModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <div class="modal-heading"><div><p class="eyebrow">EVIDENCIJA</p><h2 id="modalTitle">Dodaj klijenta</h2><p>Unesite podatke o poseti.</p></div><button id="closeModalBtn" class="close-btn" aria-label="Zatvori" type="button">×</button></div>
+      <form id="clientForm">
+        <input id="recordId" type="hidden">
+        <div class="form-grid">
+          <label>ID klijenta<input id="clientCode" type="text" placeholder="Npr. 1001" required maxlength="30"><small>Jedinstvena oznaka koju vi određujete.</small></label>
+          <label>Datum usluge<input id="clientDate" type="date" required></label>
+          <label class="span-2">Ime i prezime<input id="clientName" type="text" placeholder="Npr. Marko Marković" required maxlength="120"></label>
+          <label class="span-2">Vrsta usluge<select id="clientService" required><option value="">Izaberite uslugu</option><option>Šišanje</option><option>Fen frizura</option><option>Farbanje</option><option>Pramenovi</option><option>Brada</option><option>Šišanje i brada</option><option>Frizura za svečane prilike</option><option>Ostalo</option></select></label>
+          <label class="span-2">Cena (RSD)<div class="price-input"><input id="clientPrice" type="number" min="0" step="1" placeholder="Npr. 1200" required><span>RSD</span></div></label>
+        </div>
+        <div id="clientFormMessage" class="form-message" aria-live="polite"></div>
+        <div class="modal-actions"><button id="cancelBtn" class="btn btn-outline" type="button">Otkaži</button><button id="saveBtn" class="btn btn-primary" type="submit">Sačuvaj zapis <span>→</span></button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
