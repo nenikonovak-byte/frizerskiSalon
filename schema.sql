@@ -1,15 +1,48 @@
 -- Pokrenite ovo u Supabase Dashboard → SQL Editor → New query.
+-- Skripta je bezbedna za ponovno pokretanje: dodaje kolone postojećoj tabeli.
 -- Evidencija je dostupna samo prijavljenim korisnicima.
 create table if not exists public.clients (
   id bigint generated always as identity primary key,
   client_code text not null unique,
   full_name text not null,
   service_date date not null,
+  service_time time,
   service_type text not null,
   price numeric(12,2) not null check (price >= 0),
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  created_by uuid references auth.users(id) on delete set null,
+  created_by_email text
 );
+
+-- Nadogradnja postojeće baze: stare zapise ne briše i ne menja.
+alter table public.clients add column if not exists service_time time;
+alter table public.clients add column if not exists created_by uuid references auth.users(id) on delete set null;
+alter table public.clients add column if not exists created_by_email text;
+
+-- Autor se automatski upisuje iz trenutno prijavljenog Supabase naloga.
+-- Pri izmeni zapisa autor se čuva i ne menja se na osobu koja ga uređuje.
+create or replace function public.set_client_audit_fields()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if tg_op = 'INSERT' then
+    new.created_by := auth.uid();
+    new.created_by_email := coalesce(auth.jwt() ->> 'email', 'Nepoznat korisnik');
+  elsif tg_op = 'UPDATE' then
+    new.created_by := old.created_by;
+    new.created_by_email := old.created_by_email;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists clients_set_audit_fields on public.clients;
+create trigger clients_set_audit_fields
+before insert or update on public.clients
+for each row execute function public.set_client_audit_fields();
 
 alter table public.clients enable row level security;
 
