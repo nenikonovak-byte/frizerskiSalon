@@ -44,7 +44,13 @@ function explainError(error) {
 function openModal(client = null) {
   $("clientForm").reset();
   $("recordId").value = client?.id || "";
-  $("clientCode").value = client?.client_code || "";
+  const nextCode = clients.reduce((max, c) => {
+    const n = /^\d+$/.test(String(c.client_code || "")) ? Number(c.client_code) : 0;
+    return Math.max(max, n);
+  }, 0) + 1;
+  $("clientCode").value = client?.client_code || String(nextCode);
+  $("clientCode").readOnly = true;
+  $("assignedTo").value = client?.assigned_to || "";
   $("clientName").value = client?.full_name || "";
   $("clientDate").value = client?.service_date || todayISO();
   $("clientTime").value = client ? (client.service_time ? String(client.service_time).slice(0, 5) : "") : currentTime();
@@ -54,7 +60,7 @@ function openModal(client = null) {
   $("saveBtn").innerHTML = client ? "Sačuvaj izmene <span>→</span>" : "Sačuvaj zapis <span>→</span>";
   $("clientFormMessage").textContent = "";
   $("clientModal").classList.remove("hidden");
-  setTimeout(() => $("clientCode").focus(), 80);
+  setTimeout(() => $("clientName").focus(), 80);
 }
 function closeModal() { $("clientModal").classList.add("hidden"); }
 function filteredClients() {
@@ -65,7 +71,7 @@ function filteredClients() {
   const weekStart = new Date(); weekStart.setHours(0,0,0,0); weekStart.setDate(weekStart.getDate()-6);
   const weekStartISO = `${weekStart.getFullYear()}-${String(weekStart.getMonth()+1).padStart(2,"0")}-${String(weekStart.getDate()).padStart(2,"0")}`;
   const rows = clients.filter(c => {
-    const searchable = `${c.client_code} ${c.full_name} ${c.service_type} ${c.created_by_email || ""}`.toLocaleLowerCase("sr");
+    const searchable = `${c.client_code} ${c.full_name} ${c.service_type} ${c.assigned_to || ""}`.toLocaleLowerCase("sr");
     const date = c.service_date || "";
     const periodMatch = period === "all" || (period === "today" && date === today) || (period === "week" && date >= weekStartISO && date <= today);
     return (!query || searchable.includes(query)) && (!service || c.service_type === service) && periodMatch;
@@ -92,7 +98,7 @@ function render() {
       <td class="date-cell"><span>${dateDisplay(c.service_date)}</span><small class="time-note">${timeDisplay(c.service_time)}</small></td>
       <td><span class="service-pill">${escapeHtml(c.service_type)}</span></td>
       <td class="price-cell">${money(c.price)}</td>
-      <td class="creator-cell">${escapeHtml(c.created_by_email || "Nije zabeleženo")}</td>
+      <td class="creator-cell">${escapeHtml(c.assigned_to || "Nije izabrano")}</td>
       <td><div class="row-actions"><button class="icon-btn edit-btn" data-edit="${c.id}" title="Izmeni" aria-label="Izmeni zapis">✎</button><button class="icon-btn delete-btn" data-delete="${c.id}" title="Obriši" aria-label="Obriši zapis">⌫</button></div></td>
     </tr>`).join("");
   }
@@ -136,6 +142,7 @@ async function saveClient(event) {
   const recordId = $("recordId").value;
   const payload = {
     client_code: $("clientCode").value.trim(),
+    assigned_to: $("assignedTo").value,
     full_name: $("clientName").value.trim(),
     service_date: $("clientDate").value,
     service_time: $("clientTime").value,
