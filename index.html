@@ -75,14 +75,14 @@
             <button id="refreshBtn" class="btn btn-outline" type="button">↻ Osveži</button>
           </div>
           <div class="toolbar">
-            <div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Pretraži ID, ime, uslugu ili autora..."></div>
+            <div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Pretraži ID, ime, uslugu ili zaduženu osobu..."></div>
             <div class="filter-wrap"><label for="serviceFilter">Vrsta usluge</label><select id="serviceFilter"><option value="">Sve usluge</option><option>Šišanje</option><option>Fen frizura</option><option>Farbanje</option><option>Pramenovi</option><option>Brada</option><option>Šišanje i brada</option><option>Frizura za svečane prilike</option><option>Ostalo</option></select></div>
             <div class="filter-wrap sort-wrap"><label for="sortFilter">Sortiraj</label><select id="sortFilter"><option value="newest">Najnovije prvo</option><option value="oldest">Najstarije prvo</option><option value="name">Ime A–Š</option><option value="price-high">Cena: najveća</option><option value="price-low">Cena: najmanja</option></select></div>
           </div>
           <div class="quick-filters" role="group" aria-label="Brzi filteri"><button type="button" class="quick-filter active" data-period="all">Sve posete <span id="allCount">0</span></button><button type="button" class="quick-filter" data-period="today">Danas <span id="todayCount">0</span></button><button type="button" class="quick-filter" data-period="week">Ovih 7 dana <span id="weekCount">0</span></button></div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>ID</th><th>IME I PREZIME</th><th>DATUM I VREME</th><th>VRSTA USLUGE</th><th>CENA</th><th>UNEO ZAPIS</th><th class="actions-head">AKCIJE</th></tr></thead>
+              <thead><tr><th>ID</th><th>IME I PREZIME</th><th>DATUM I VREME</th><th>VRSTA USLUGE</th><th>CENA</th><th>RADI NA KLIJENTU</th><th class="actions-head">AKCIJE</th></tr></thead>
               <tbody id="clientsTable"><tr><td colspan="7" class="empty-cell">Učitavanje podataka...</td></tr></tbody>
             </table>
           </div>
@@ -100,11 +100,12 @@
       <form id="clientForm">
         <input id="recordId" type="hidden">
         <div class="form-grid">
-          <label>ID klijenta<input id="clientCode" type="text" placeholder="Npr. 1001" required maxlength="30"><small>Jedinstvena oznaka koju vi određujete.</small></label>
+          <label>ID klijenta<input id="clientCode" type="text" readonly><small>ID se dodeljuje automatski.</small></label>
           <label>Datum usluge<input id="clientDate" type="date" required></label>
           <label>Ime i prezime<input id="clientName" type="text" placeholder="Npr. Marko Marković" required maxlength="120"></label>
           <label>Vreme usluge<input id="clientTime" type="time" required></label>
           <label class="span-2">Vrsta usluge<select id="clientService" required><option value="">Izaberite uslugu</option><option>Šišanje</option><option>Fen frizura</option><option>Farbanje</option><option>Pramenovi</option><option>Brada</option><option>Šišanje i brada</option><option>Frizura za svečane prilike</option><option>Ostalo</option></select></label>
+          <label class="span-2">Ko radi sa klijentom<select id="assignedTo" required><option value="">Izaberite osobu</option><option value="Seka">Seka</option><option value="Jeca">Jeca</option></select></label>
           <label class="span-2">Cena (RSD)<div class="price-input"><input id="clientPrice" type="number" min="0" step="1" placeholder="Npr. 1200" required><span>RSD</span></div></label>
         </div>
         <div id="clientFormMessage" class="form-message" aria-live="polite"></div>
@@ -116,3 +117,4 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
+
