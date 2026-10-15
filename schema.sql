@@ -12,13 +12,15 @@ create table if not exists public.clients (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by uuid references auth.users(id) on delete set null,
-  created_by_email text
+  created_by_email text,
+  assigned_to text check (assigned_to in ('Seka', 'Jeca'))
 );
 
 -- Nadogradnja postojeće baze: stare zapise ne briše i ne menja.
 alter table public.clients add column if not exists service_time time;
 alter table public.clients add column if not exists created_by uuid references auth.users(id) on delete set null;
 alter table public.clients add column if not exists created_by_email text;
+alter table public.clients add column if not exists assigned_to text;
 
 -- Autor se automatski upisuje iz trenutno prijavljenog Supabase naloga.
 -- Pri izmeni zapisa autor se čuva i ne menja se na osobu koja ga uređuje.
