@@ -116,3 +116,18 @@
 
 @media(max-width:420px){.quick-filters{display:grid;grid-template-columns:1fr 1fr}.quick-filter:first-child{grid-column:1/-1}.stats-grid{grid-template-columns:1fr}.page-heading h1{font-size:26px}.form-grid{grid-template-columns:1fr}.form-grid .span-2{grid-column:span 1}}
 
+
+/* Broj klijenata i promet u jednom redu */
+.stats-card .stat-value {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 5px;
+}
+
+.stats-card .stat-value .amount,
+.stats-card .stat-value .currency {
+    display: inline;
+    white-space: nowrap;
+}
