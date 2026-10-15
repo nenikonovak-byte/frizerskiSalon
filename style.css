@@ -100,11 +100,11 @@
 
 
 /* Poboljsan prikaz evidencije */
-.panel{overflow:hidden}.panel-header{align-items:center}.panel-header .eyebrow{margin:0 0 7px;font-size:9px}.panel-header h2{font-size:19px;letter-spacing:-.45px}.panel-header p:not(.eyebrow){line-height:1.55}.toolbar{gap:12px;flex-wrap:wrap}.search-box{flex: 0 1 220px;
-    width: 220px;
+.panel{overflow:hidden}.panel-header{align-items:center}.panel-header .eyebrow{margin:0 0 7px;font-size:9px}.panel-header h2{font-size:19px;letter-spacing:-.45px}.panel-header p:not(.eyebrow){line-height:1.55}.toolbar{gap:12px;flex-wrap:wrap}.search-box{flex: 0 1 170px;
+    width: 1700px;
     min-width: 0;
     max-width: 220px;
-    height: 34px;
+    height: 17px;
     padding: 0 9px;}.search-box input {
     font-size: 10px;
   }.filter-wrap{gap:8px}.toolbar {
