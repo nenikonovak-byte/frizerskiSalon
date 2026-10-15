@@ -123,3 +123,543 @@
 
 
 
+
+
+/* === Dorada statistike: naziv levo, rezultat desno === */
+.stats-grid {
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  min-height: 0;
+  padding: 15px 18px;
+  border-radius: 12px;
+}
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  white-space: normal;
+}
+.stat-top > span {
+  color: #77796f;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.stat-top > strong {
+  display: block;
+  flex-shrink: 0;
+  margin: 0;
+  font: 800 25px/1.1 Manrope, sans-serif;
+  letter-spacing: -0.8px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.stat-dark .stat-top > span {
+  color: #c0c1b9;
+}
+.stat-dark .stat-top > strong {
+  color: #fff;
+}
+
+/* === Toolbar kompaktniji i ujednačen === */
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(190px, 1.5fr) minmax(180px, 1fr) minmax(170px, 1fr);
+  align-items: end;
+  gap: 10px;
+  padding: 0 24px 15px;
+}
+.search-box {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  height: 36px;
+  padding: 0 10px;
+  gap: 8px;
+  border-radius: 8px;
+  background: #fcfcfa;
+}
+.search-box > span {
+  font-size: 20px;
+  line-height: 1;
+}
+.search-box input {
+  font-size: 11px;
+}
+.filter-wrap {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.filter-wrap label {
+  font-size: 10px;
+  white-space: nowrap;
+}
+.filter-wrap select {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  min-height: 36px;
+  padding: 8px 25px 8px 9px;
+  border-radius: 8px;
+  font-size: 11px;
+}
+.sort-wrap {
+  margin-left: 0;
+}
+.quick-filters {
+  gap: 7px;
+  padding-bottom: 14px;
+}
+.quick-filter {
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+.quick-filter span {
+  min-width: 18px;
+  height: 18px;
+  margin-left: 5px;
+}
+
+/* Tablet */
+@media (max-width: 1050px) {
+  .stats-grid {
+    gap: 9px;
+  }
+  .stat-card {
+    padding: 14px;
+  }
+  .stat-top > span {
+    font-size: 11px;
+  }
+  .stat-top > strong {
+    font-size: 22px;
+  }
+  .toolbar {
+    grid-template-columns: minmax(170px, 1.3fr) minmax(160px, 1fr);
+  }
+  .search-box {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobilni prikaz */
+@media (max-width: 760px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 17px;
+  }
+  .stat-card {
+    padding: 13px 15px;
+  }
+  .stat-top > span {
+    font-size: 12px;
+  }
+  .stat-top > strong {
+    font-size: 22px;
+  }
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 9px;
+    padding: 0 15px 14px;
+  }
+  .search-box {
+    width: 100%;
+    max-width: none;
+    min-height: 37px;
+  }
+  .filter-wrap {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    width: 100%;
+    gap: 8px;
+  }
+  .filter-wrap label {
+    min-width: 0;
+  }
+  .filter-wrap select {
+    width: 100%;
+    min-height: 36px;
+  }
+  .quick-filters {
+    padding: 0 15px 14px;
+  }
+}
+
+
+/* === Dodatno unapređen mobilni prikaz === */
+@media (max-width: 760px) {
+  body {
+    font-size: 13px;
+  }
+
+  .sidebar {
+    position: relative;
+    padding: 12px 15px;
+    gap: 10px;
+    min-height: 0;
+  }
+  .brand {
+    gap: 9px;
+  }
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    font-size: 22px;
+  }
+  .brand-copy strong {
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .side-link {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  .sidebar-note {
+    display: none;
+  }
+
+  .main {
+    padding: 0 12px 18px;
+  }
+  .topbar {
+    height: 52px;
+    gap: 8px;
+  }
+  .breadcrumb {
+    font-size: 10px;
+  }
+  .top-actions {
+    gap: 6px;
+  }
+  #logoutBtn {
+    font-size: 10px;
+    padding: 8px 9px;
+  }
+
+  .page-heading {
+    padding: 23px 0 17px;
+    gap: 14px;
+  }
+  .page-heading h1 {
+    font-size: clamp(23px, 6vw, 28px);
+    line-height: 1.15;
+    letter-spacing: -1px;
+  }
+  .subtitle {
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 34ch;
+  }
+  .page-heading > .btn {
+    width: 100%;
+    min-height: 40px;
+    padding: 10px 13px;
+  }
+
+  .stats-grid {
+    gap: 7px;
+  }
+  .stat-card {
+    padding: 12px 14px;
+    border-radius: 11px;
+  }
+  .stat-top > span {
+    max-width: 70%;
+    font-size: 11px;
+  }
+  .stat-top > strong {
+    font-size: 21px;
+  }
+
+  .panel {
+    border-radius: 12px;
+  }
+  .panel-header {
+    padding: 16px 14px 13px;
+    gap: 10px;
+  }
+  .panel-header h2 {
+    font-size: 16px;
+  }
+  .panel-header p:not(.eyebrow) {
+    font-size: 10px;
+    line-height: 1.45;
+    max-width: 28ch;
+  }
+  .panel-header .btn {
+    flex-shrink: 0;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .toolbar {
+    padding: 0 12px 12px;
+    gap: 8px;
+  }
+  .search-box {
+    min-height: 39px;
+    padding: 0 11px;
+    border-radius: 9px;
+  }
+  .search-box input {
+    font-size: 12px;
+  }
+  .filter-wrap {
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 7px;
+  }
+  .filter-wrap label {
+    font-size: 10px;
+  }
+  .filter-wrap select {
+    min-height: 38px;
+    padding: 8px 25px 8px 9px;
+    font-size: 11px;
+  }
+
+  .quick-filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 0 12px 12px;
+  }
+  .quick-filter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 5px;
+    min-width: 0;
+    font-size: 10px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  .quick-filter span {
+    min-width: 17px;
+    height: 17px;
+    margin-left: 0;
+    padding: 0 4px;
+    font-size: 9px;
+  }
+
+  /* Kartice zapisa umesto široke tabele na telefonu */
+  .table-wrap {
+    overflow: visible;
+    border-top: 1px solid #f0f0eb;
+  }
+  table, tbody {
+    display: block;
+    width: 100%;
+  }
+  tbody tr {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 10px;
+    margin: 10px;
+    border: 1px solid #e9ebe3;
+    border-radius: 11px;
+    box-shadow: 0 2px 8px rgba(25, 25, 20, .035);
+  }
+  tbody td {
+    padding: 10px;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  tbody td:first-child,
+  tbody td:last-child {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  tbody td:nth-child(1) {
+    padding-top: 11px;
+  }
+  tbody td:nth-child(2) {
+    padding: 9px 10px;
+  }
+  tbody td:nth-child(3),
+  tbody td:nth-child(4),
+  tbody td:nth-child(5),
+  tbody td:nth-child(6) {
+    min-width: 0;
+  }
+  tbody td:nth-child(5) {
+    font-size: 12px;
+  }
+  tbody td:nth-child(7) {
+    padding: 9px 10px;
+  }
+  .client-avatar {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    margin-right: 8px;
+  }
+  .client-name {
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  .service-pill {
+    display: inline-block;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.35;
+    padding: 5px 7px;
+  }
+  .row-actions {
+    gap: 6px;
+  }
+  .row-actions .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+  .table-footer {
+    padding: 11px 12px;
+    font-size: 9px;
+  }
+  .bottom-note {
+    font-size: 9px;
+    line-height: 1.5;
+    padding: 15px 4px 0;
+  }
+
+  .modal {
+    padding: 10px;
+    align-items: end;
+  }
+  .modal-card {
+    width: 100%;
+    max-height: 90dvh;
+    padding: 19px 16px;
+    border-radius: 16px 16px 12px 12px;
+  }
+  .modal-heading {
+    margin-bottom: 18px;
+  }
+  .modal-heading h2 {
+    font-size: 21px;
+  }
+  .form-grid {
+    gap: 12px;
+  }
+  .form-grid label {
+    font-size: 10px;
+  }
+  .form-grid input,
+  .form-grid select {
+    min-height: 40px;
+    padding: 10px;
+    font-size: 12px;
+  }
+  .modal-actions {
+    position: sticky;
+    bottom: -19px;
+    margin: 18px -16px -19px;
+    padding: 12px 16px 15px;
+    background: #fff;
+  }
+}
+
+@media (max-width: 420px) {
+  .sidebar {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .brand-copy strong {
+    font-size: 12px;
+    letter-spacing: .6px;
+  }
+  .side-link {
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+  .main {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .page-heading h1 {
+    font-size: 24px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .panel-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .panel-header .btn {
+    font-size: 9px;
+    padding: 8px;
+  }
+  .quick-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .quick-filter:first-child {
+    grid-column: 1 / -1;
+  }
+  tbody tr {
+    margin: 8px;
+    gap: 0 7px;
+  }
+  tbody td {
+    padding: 9px 8px;
+    font-size: 10px;
+  }
+  tbody td:first-child,
+  tbody td:last-child {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .creator-cell {
+    font-size: 9px;
+  }
+  .id-pill {
+    padding: 5px 7px;
+  }
+}
+
+@media (max-width: 340px) {
+  .breadcrumb {
+    font-size: 9px;
+  }
+  .side-link {
+    white-space: normal;
+  }
+  .filter-wrap {
+    grid-template-columns: 68px minmax(0, 1fr);
+  }
+  .quick-filters {
+    grid-template-columns: 1fr;
+  }
+  .quick-filter:first-child {
+    grid-column: auto;
+  }
+  tbody tr {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  tbody td:nth-child(1),
+  tbody td:nth-child(2),
+  tbody td:nth-child(3),
+  tbody td:nth-child(4),
+  tbody td:nth-child(5),
+  tbody td:nth-child(6),
+  tbody td:nth-child(7) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  tbody td:nth-child(2) {
+    grid-column: 1;
+  }
+}
+
